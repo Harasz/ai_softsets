@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dominator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .grid1 {
+        display: grid;
+        grid-template-columns: 100px 100px 100px 1fr;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 100px 100px 1fr;
+      }
+      .grid3 {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+      }
+      .t-center {
+        line-height: 40px;
+      }
+      .t-center2 {
+        line-height: 38px;
+      }
+      .percentage_input {
+        position: absolute;
+        top: 0;
+        left: -98px;
+        display: flex;
+      }
+      .percentage_input input {
+        width: 60px;
+        height: 40px;
+        padding-left: 4px;
+        padding-right: 8px;
+      }
+      .percentage_input span {
+        line-height: 40px;
+        padding-left: 1rem;
+      }
+      .label {
+        position: relative;
+      }
+    </style>
+  </head>
+
+  <body class="p-12">
+    <section class="w-6/12 m-auto">
+      {% if result %}
+        <h1 class="text-4xl border-b pb-8 mb-10">Dominator</h1>
+        <section>
+          <h3 class="text-2xl">Wynik</h3>
+          <div class="flex flex-col mb-2">
+            {% for key, value in result.items() %}
+              <span>{{ key }}: {{ value }}</span>
+            {% endfor %}
+          </div>
+        </section>
+      {% else %}
+        <form method="post" action="/">
+          <h1 class="text-4xl border-b pb-8 mb-10">Dominator</h1>
+          {% if has_errors %}
+            <section>
+              <h3 class="text-2xl">Błędy formularza</h3>
+              <div class="flex flex-col mb-2">
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <span>{{ field.label }}: {{ error }}</span>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </section>
+          {% endif %}
+          <section>
+            <h3 class="text-2xl">Powierzchnia</h3>
+            <div class="grid1 gap-3 mt-6">
+              <div></div>
+              <div>Od [ft<sup>2</sup>]</div>
+              <div>Do [ft<sup>2</sup>]</div>
+              <div></div>
+
+              <div class="t-center label">
+                Użytkowa
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="GrLivArea_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  autofocus
+                  name="GrLivArea_from"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="GrLivArea_to"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div></div>
+
+              <div class="t-center label">
+                Działki
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="LotArea_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="LotArea_from"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="LotArea_to"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div></div>
+
+              <div class="t-center label">
+                Garażu
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="GarageArea_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="GarageArea_from"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="GarageArea_to"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div class="t-center2">
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="GarageArea_none"
+                  /><span class="ml-2 text-gray-700">Brak</span>
+                </label>
+              </div>
+
+              <div class="t-center label">
+                Piwnicy
+                 <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="TotalBsmtSF_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="TotalBsmtSF_from"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="TotalBsmtSF_to"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div class="t-center2">
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="TotalBsmtSF_none"
+                  /><span class="ml-2 text-gray-700">Brak</span>
+                </label>
+              </div>
+            </div>
+          </section>
+          <section class="mt-10">
+            <h3 class="text-2xl">Pomieszczenia</h3>
+            <div class="grid2 gap-3 mt-6">
+              <div></div>
+              <div>Ilość</div>
+              <div></div>
+
+              <div class="t-center label">
+                Pokoje
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="BedroomAbvGr_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="BedroomAbvGr"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div></div>
+
+              <div class="t-center label">
+                Łazienki
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="Bathrooms_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="Bathrooms"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div></div>
+
+              <div class="t-center label">
+                Kuchnie
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="KitchenAbvGr_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="KitchenAbvGr"
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                  required
+                />
+              </div>
+              <div></div>
+            </div>
+          </section>
+          <section class="mt-10">
+            <h3 class="text-2xl">Stan i wyposażenie</h3>
+            <div class="grid3 gap-3 mt-6">
+              <div class="label">
+                Przyłącza
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="Utilities_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label class="inline-flex items-center">
+                  <input
+                    type="radio"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="Utilities"
+                    value="nsw"
+                  /><span class="ml-2 text-gray-700">Prąd i gaz</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="radio"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="Utilities"
+                    value="all"
+                  /><span class="ml-2 text-gray-700">Prąd, gaz i woda</span>
+                </label>
+              </div>
+
+              <div class="label">
+                Ogrzewanie
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="Heating_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="HeatingWall"
+                  /><span class="ml-2 text-gray-700">Piec ścienny</span>
+                </label>
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="HeatingOthw"
+                  /><span class="ml-2 text-gray-700"
+                    >Ciepła woda lub para wodna inna niż gaz</span
+                  >
+                </label>
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="HeatingFloor"
+                  /><span class="ml-2 text-gray-700">Piec podłogowy</span>
+                </label>
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="HeatingGasA"
+                  /><span class="ml-2 text-gray-700"
+                    >Piec gazowy z wymuszonym obiegiem ciepłego powietrza</span
+                  >
+                </label>
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="HeatingGasW"
+                  /><span class="ml-2 text-gray-700"
+                    >Ogrzewacz gazowy lub ogrzewanie parowe</span
+                  >
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="HeatingGrav"
+                  /><span class="ml-2 text-gray-700">Piec grawitacyjny</span>
+                </label>
+              </div>
+
+              <div class="label">
+                Klimatyzacja
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="CentralAir_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="mb-2">
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="CentralAir"
+                  /><span class="ml-2 text-gray-700">Powinien posiadać</span>
+                </label>
+              </div>
+
+              <div class="label">
+                Kominek
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="Fireplaces_p" type="number" min="0" max="100" required value="100"  class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="mb-2">
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="Fireplaces"
+                  /><span class="ml-2 text-gray-700">Powinien posiadać</span>
+                </label>
+              </div>
+
+              <div class="label">
+                Basen
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="PoolArea_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="mb-2">
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="PoolArea"
+                  /><span class="ml-2 text-gray-700">Powinien posiadać</span>
+                </label>
+              </div>
+
+              <div class="label">
+                Płot
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="Fence_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="mb-2">
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="Fence"
+                  /><span class="ml-2 text-gray-700">Powinien posiadać</span>
+                </label>
+              </div>
+
+              <div class="t-center label">
+                Rok budowy
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="YearBuilt_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="mb-2">
+                <div>
+                  <span class="mr-2">Od</span>
+                  <input
+                    type="number"
+                    name="YearBuilt_from"
+                    class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                    required
+                    style="width: 100px"
+                  />
+                  <span class="mr-2 ml-3">Do</span>
+                  <input
+                    type="number"
+                    name="YearBuilt_to"
+                    class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100 w-full"
+                    required
+                    style="width: 100px"
+                  />
+                </div>
+              </div>
+
+              <div class="t-center label">
+                Stan elewacji
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="OverallCond_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="mb-2">
+                <select
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100"
+                  style="width: 160px; height: 40px"
+                  name="OverallCond"
+                >
+                  <option value="5">Bardzo dobry</option>
+                  <option value="4">Dobry</option>
+                  <option value="3">Okej</option>
+                  <option value="2">Zła</option>
+                  <option value="1">Zniszczona</option>
+                </select>
+              </div>
+
+              <div class="t-center label">
+                Stan kuchni
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="KitchenQual_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="mb-2">
+                <select
+                  class="rounded-sm px-4 py-2 focus:outline-none bg-gray-100"
+                  style="width: 160px; height: 40px"
+                  name="KitchenQual"
+                >
+                  <option value="5">Bardzo dobry</option>
+                  <option value="4">Dobry</option>
+                  <option value="3">Okej</option>
+                  <option value="2">Zły</option>
+                  <option value="1">Do remontu</option>
+                </select>
+              </div>
+            </div>
+          </section>
+          <section class="mt-10">
+            <h3 class="text-2xl">Dojazd</h3>
+            <div class="grid3 gap-3 mt-6">
+              <div class="label">
+                Chodnik
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="PavedDrive_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="PavedDriveP"
+                  /><span class="ml-2 text-gray-700">Żwirowany</span>
+                </label>
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="PavedDrive1"
+                  /><span class="ml-2 text-gray-700">Brukowany</span>
+                </label>
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="PavedDrive"
+                  /><span class="ml-2 text-gray-700">Brak</span>
+                </label>
+              </div>
+
+              <div class="label">
+                Dojazd do posesji
+                <span class="percentage_input rounded-sm bg-gray-100">
+                  <span>%</span>
+                  <input name="Street_p" type="number" min="0" max="100" required value="100" class="focus:outline-none bg-transparent" />
+                </span>
+              </div>
+              <div class="flex flex-col mb-2">
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="StreetP"
+                  /><span class="ml-2 text-gray-700">Asfaltowany</span>
+                </label>
+                <label class="inline-flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-4 w-4 text-gray-600"
+                    name="StreetG"
+                  /><span class="ml-2 text-gray-700">Żwirowany</span>
+                </label>
+              </div>
+            </div>
+          </section>
+          <button
+            class="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black mt-4"
+            type="submit"
+          >
+            Pokaż propozycje
+          </button>
+        </form>
+      {% endif %}
+    </section>
+  </body>
+</html>
