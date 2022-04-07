@@ -15,6 +15,7 @@ https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 ## Authors
 
 - [@Szymon Cwynar](https://www.github.com/szymcwy)
+- [@Jakub Sydor](https://www.github.com/Harasz)
 
 ## Installation
 
